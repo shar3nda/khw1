@@ -101,7 +101,7 @@ int Sorters::quickSortPartitionHelper(std::vector<int> &v, int left, int right) 
     for (int i = right; i > left; i--) {
         // Если элемент больше опорного, то меняем его с элементом с индексом k
         if (v[i] > pivot) {
-            std::swap(v[i], v[k]);
+            std::swap(v[i], v[k--]);
         }
     }
     // Меняем опорный элемент с элементом с индексом k

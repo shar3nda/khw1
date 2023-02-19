@@ -29,13 +29,14 @@ public:
             {"SHELL_SORT_SHELL", Sorters::shellSortShell}};
     }
     std::unordered_map<std::string, std::function<void(std::vector<int> &)>> sorters;
-    enum ArrayType { RANDOM_0_5, RANDOM_0_4000, ALMOST_SORTED, REVERSE_SORTED };
+    std::vector<std::string> ArrayTypes{"RANDOM_0_5", "RANDOM_0_4000", "ALMOST_SORTED",
+                                        "REVERSE_SORTED"};
     void test();
 
 private:
-    void runTest(std::string method, SortTester::ArrayType type, std::vector<int> &v);
+    void runTest(const std::string &sorting_method, const std::string &array_type, std::vector<int> &v);
 
-    void makeArray(std::vector<int> &v, SortTester::ArrayType type);
+    void makeArray(std::vector<int> &v, const std::string &type);
 };
 
 #endif  // KHW1_SORT_TESTER_H
