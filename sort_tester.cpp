@@ -28,8 +28,11 @@ void SortTester::test() {
 void SortTester::runTest(const std::string &sorting_method, const std::string &array_type, std::vector<int> &v) {
     for (int i = 0; i < 50; i++) {
         std::ofstream outfile;
+        // Открываем CSV файл на дозапись
         outfile.open("results.csv", std::ios::out | std::ios::app);
+        // Генерируем массив входных данных
         SortTester::makeArray(v, array_type);
+        // Начинаем вход
         auto start = std::chrono::high_resolution_clock::now();
         sorters[sorting_method](v);
         assert(std::is_sorted(v.begin(), v.end()));
