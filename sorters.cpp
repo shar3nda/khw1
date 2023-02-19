@@ -6,8 +6,8 @@
 #include "heapsort.h"
 
 void Sorters::bubbleSort(std::vector<int> &v) {
-    for (int i = 0; i < v.size(); i++) {
-        for (int j = 0; j < v.size() - 1; j++) {
+    for (size_t i = 0; i < v.size(); i++) {
+        for (size_t j = 0; j < v.size() - 1; j++) {
             // Обмениваем элементы местами, если они не упорядочены
             if (v[j] > v[j + 1]) {
                 std::swap(v[j], v[j + 1]);
@@ -17,9 +17,9 @@ void Sorters::bubbleSort(std::vector<int> &v) {
 }
 
 void Sorters::selectionSort(std::vector<int> &v) {
-    for (int i = 0; i < v.size(); i++) {
+    for (size_t i = 0; i < v.size(); i++) {
         int min = i;
-        for (int j = i + 1; j < v.size(); j++) {
+        for (size_t j = i + 1; j < v.size(); j++) {
             // Ищем минимальный элемент в оставшейся части массива
             if (v[j] < v[min]) {
                 min = j;
@@ -31,7 +31,7 @@ void Sorters::selectionSort(std::vector<int> &v) {
 }
 
 void Sorters::insertionSort(std::vector<int> &v) {
-    for (int i = 1; i < v.size(); i++) {
+    for (size_t i = 1; i < v.size(); i++) {
         int j = i;
         // Опускаем новый элемент на нужную позицию в отсортированной части массива
         while (j > 0 && v[j] < v[j - 1]) {
@@ -53,7 +53,7 @@ void Sorters::mergeSort(std::vector<int> &v) {
     mergeSort(left);
     mergeSort(right);
     int i = 0, j = 0, k = 0;
-    while (i < left.size() && j < right.size()) {
+    while (i < static_cast<int>(left.size()) && j < static_cast<int>(right.size())) {
         // Берем меньший из двух передних элементов в отсортированных половинах
         // и помещаем его в результирующий массив
         if (left[i] < right[j]) {
@@ -67,12 +67,12 @@ void Sorters::mergeSort(std::vector<int> &v) {
     }
 
     // Если в половинах остались элементы, то добавляем их в результирующий массив
-    while (i < left.size()) {
+    while (i < static_cast<int>(left.size())) {
         v[k] = left[i];
         i++;
         k++;
     }
-    while (j < right.size()) {
+    while (j < static_cast<int>(right.size())) {
         v[k] = right[j];
         j++;
         k++;
@@ -95,30 +95,22 @@ void Sorters::quickSortHelper(std::vector<int> &v, int left, int right) {
 }
 
 int Sorters::quickSortPartitionHelper(std::vector<int> &v, int left, int right) {
-    int i = left, j = right;
-    // Выбираем левый элемент в качестве опорного
+    // Выбираем первый элемент в качестве опорного
     int pivot = v[left];
-    while (i < j) {
-        // Ищем элемент, больший опорного
-        while (pivot >= v[i]) {
-            i++;
-        }
-        // Ищем элемент, меньший или равный опорному
-        while (pivot < v[j]) {
-            j--;
-        }
-        // Меняем их местами
-        if (i < j) {
-            std::swap(v[i], v[j]);
+    int k = right;
+    for (int i = right; i > left; i--) {
+        // Если элемент больше опорного, то меняем его с элементом с индексом k
+        if (v[i] > pivot) {
+            std::swap(v[i], v[k]);
         }
     }
-    // Меняем опорный элемент с элементом, на котором остановились
-    std::swap(v[left], v[j]);
-    return j;
+    // Меняем опорный элемент с элементом с индексом k
+    std::swap(v[left], v[k]);
+    return k;
 }
 
 void Sorters::binaryInsertionSort(std::vector<int> &v) {
-    for (int i = 1; i < v.size(); i++) {
+    for (size_t i = 1; i < v.size(); i++) {
         // Ищем место для вставки элемента с помощью бинарного поиска
         int left = 0, right = i - 1, mid;
         while (left <= right) {
@@ -142,7 +134,7 @@ void Sorters::heapSort(std::vector<int> &v) {
     // Создаем кучу из исходного массива
     Heap<int> heap(v.begin(), v.end());
     // Извлекаем элементы из кучи
-    for (int i = 0; i < v.size(); ++i) {
+    for (size_t i = 0; i < v.size(); ++i) {
         v[i] = heap.extract();
     }
 }
@@ -150,7 +142,7 @@ void Sorters::heapSort(std::vector<int> &v) {
 void Sorters::radixSort(std::vector<int> &v) {
     int max_elem = v[0];
     // Находим максимальный элемент
-    for (int i = 1; i < v.size(); i++) {
+    for (size_t i = 1; i < v.size(); i++) {
         if (v[i] > max_elem) {
             max_elem = v[i];
         }
@@ -165,38 +157,38 @@ void Sorters::radixSortCountHelper(std::vector<int> &v, int radix) {
     std::vector<int> output(v.size());
     std::vector<int> count(256);
     // Заполняем массив подсчетов нулями
-    for (int i = 0; i < 256; ++i) {
+    for (size_t i = 0; i < 256; ++i) {
         count[i] = 0;
     }
     // Выполняем подсчет количества элементов
-    for (int i = 0; i < v.size(); ++i) {
+    for (size_t i = 0; i < v.size(); ++i) {
         ++count[(v[i] / radix) % 256];
     }
     // Аккумулируем сумму
-    for (int i = 1; i < 256; ++i) {
+    for (size_t i = 1; i < 256; ++i) {
         count[i] += count[i - 1];
     }
     // Заполняем выходной массив
-    for (int i = v.size() - 1; i >= 0; --i) {
+    for (int i = static_cast<int>(v.size() - 1); i >= 0; --i) {
         output[count[(v[i] / radix) % 256] - 1] = v[i];
         --count[(v[i] / radix) % 256];
     }
 
-    for (int i = 0; i < v.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(v.size()); ++i) {
         v[i] = output[i];
     }
 }
 
 void Sorters::countSort(std::vector<int> &v) {
     int max_elem = v[0];
-    for (int i = 1; i < v.size(); ++i) {
+    for (size_t i = 1; i < v.size(); ++i) {
         if (v[i] > max_elem) {
             max_elem = v[i];
         }
     }
     // count[i] - количество вхождений i в исходный массив
     std::vector<int> count(max_elem + 1, 0);
-    for (int i = 0; i < v.size(); ++i) {
+    for (size_t i = 0; i < v.size(); ++i) {
         ++count[v[i]];
     }
     // Заполняем выходной массив
@@ -212,7 +204,7 @@ void Sorters::shellSortCiura(std::vector<int> &v) {
     // Последовательность Циура
     std::vector<int> gaps = {701, 301, 132, 57, 23, 10, 4, 1};
     for (const int &gap : gaps) {
-        for (int i = gap; i < v.size(); ++i) {
+        for (size_t i = gap; i < v.size(); ++i) {
             // Запоминаем текущий элемент
             int temp = v[i];
             int j = i;
@@ -229,8 +221,8 @@ void Sorters::shellSortCiura(std::vector<int> &v) {
 
 void Sorters::shellSortShell(std::vector<int> &v) {
     // Последовательность Шелла
-    for (int gap = v.size() / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < v.size(); ++i) {
+    for (int gap = static_cast<int>(v.size() / 2); gap > 0; gap /= 2) {
+        for (size_t i = gap; i < v.size(); ++i) {
             // Запоминаем текущий элемент
             int temp = v[i];
             int j = i;
@@ -246,10 +238,10 @@ void Sorters::shellSortShell(std::vector<int> &v) {
 }
 
 void Sorters::iverson1Sort(std::vector<int> &v) {
-    for (int i = 0; i < v.size(); i++) {
+    for (size_t i = 0; i < v.size(); i++) {
         // Подсчитываем количество обменов
         int swaps = 0;
-        for (int j = 0; j < v.size() - 1; j++) {
+        for (size_t j = 0; j < v.size() - 1; j++) {
             // Обмениваем элементы местами, если они не упорядочены
             if (v[j] > v[j + 1]) {
                 std::swap(v[j], v[j + 1]);
@@ -264,9 +256,9 @@ void Sorters::iverson1Sort(std::vector<int> &v) {
 }
 
 void Sorters::iverson12Sort(std::vector<int> &v) {
-    for (int i = 0; i < v.size(); i++) {
+    for (size_t i = 0; i < v.size(); i++) {
         // Определяем границу, до которой нужно сортировать
-        int bound = v.size() - i - 1;
+        int bound = static_cast<int>(v.size() - i - 1);
         int t = 0;
         for (int j = 0; j < bound; j++) {
             // Обмениваем элементы местами, если они не упорядочены
